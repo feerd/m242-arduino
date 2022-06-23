@@ -1,0 +1,50 @@
+// initialisierung rauchsensor
+int RAUCHSENSOR = A0;
+
+// initialisierung LED
+int LED = 7;
+
+// initialisierung PIIEZO
+int PIEZO = 6;
+
+// initialisierung SCHALTER
+int SCHALTER = 2;
+
+
+void setup()
+{
+  //konfiguriert den angegebenen pin als output oder input
+  pinMode(RAUCHSENSOR, INPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(PIEZO, OUTPUT);
+  pinMode(SCHALTER, INPUT);
+}
+
+void loop()
+{	
+  //wenn schalter an
+  if (digitalRead(SCHALTER)== HIGH){
+    
+    //wenn rauchsenor rauch bemerkt
+    if (analogRead(RAUCHSENSOR) > 600) {
+      
+      //LED an
+      digitalWrite(LED, HIGH);   
+      
+      //PIIEZO an
+      digitalWrite(PIEZO, HIGH);
+    } 
+    //wenn nicht
+    else {
+      
+      //LED aus
+      digitalWrite(LED, LOW);
+      
+      //PIIEZO aus
+      digitalWrite(PIEZO, LOW);
+    }
+  }
+  
+  //Verzögert nächszen durchlauf
+  delay(10); 
+}

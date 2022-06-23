@@ -1,0 +1,61 @@
+// initialisierung sensorwert 1
+int sensorWert;
+
+// initialisierung sensorwert 2
+int sensorWert1;
+
+// initialisierung sensorwert 3
+int sensorWert2;
+
+void setup()
+{
+  //konfiguriert den angegebenen pin als output oder input
+  pinMode(7, OUTPUT);
+  pinMode(13,INPUT);
+  pinMode(12,INPUT);
+  pinMode(11,INPUT);
+
+}
+
+void loop()
+{
+  //liest den wert des angegebenen pins
+  sensorWert=digitalRead(13);
+  sensorWert1=digitalRead(12);
+  sensorWert2=digitalRead(11);
+
+  //wenn 1 sensor aktiv
+  if(sensorWert == HIGH) 
+  {
+    //löst ton aus
+    tone(7,10);
+    
+    //verzögert
+    delay(300);
+    
+    //stopt ton
+    noTone(7);
+    
+    //verzögert
+    delay(100);
+  }
+  //wenn 2 sensor aktiv
+  else if(sensorWert1 == HIGH)
+  {
+	tone(7,10);
+    delay(300);
+    noTone(7);
+    delay(100);  
+  }
+  //wenn 3 sensor aktiv
+  else if(sensorWert2 == HIGH)
+  {
+	tone(7,10);
+    delay(300);
+    noTone(7);
+    delay(100);  
+  }
+  
+  //verzögert nächsten durchlauf
+  delay(100);
+}

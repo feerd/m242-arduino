@@ -1,0 +1,111 @@
+#include <Adafruit_NeoPixel.h>
+
+//variabeln initalisieren
+int led= 3;
+int ledNo= 12;
+
+
+//Arduino library zum kontrollieren LED Kreisen
+Adafruit_NeoPixel strip= Adafruit_NeoPixel(ledNo,led,NEO_RGB+NEO_KHZ800);
+
+//variabeln initalisieren
+int alarm= 2;
+int echo= 6;
+int trig= 5;
+int minDistanz = 100;
+int maxDistanz = 300;
+
+void setup() 
+{
+  
+  //konfiguriert den angegebenen pin als output oder input
+  pinMode(alarm, OUTPUT);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  
+  //Serien Monitor starten
+  Serial. begin(9600);  
+  
+  //strip vorbereiten
+  strip.begin();
+  
+  for(int i = 0; i < ledNo; i++)
+  {
+   strip.setPixelColor(i,strip.Color(0,0,0));
+  }
+ 
+  //strip data anzeigen 
+  strip.show();
+}
+
+void loop() 
+{
+  //distanz initialisieren
+  int distanz = calcDistanz();
+  
+  //zu leuchtende leds
+  int leuchten = map(distanz, minDistanz, maxDistanz, ledNo, 1);
+  
+  //wenn leuchten > 9 alarm
+  if(leuchten >= 10)
+  {
+    digitalWrite(alarm, HIGH);
+  }
+  else //sonst kein alarm
+  {
+    digitalWrite(alarm, LOW);
+  }
+  
+  //led farbe gesetzt
+  for(int i = 0; i < leuchten; i++)
+  {
+    if(i < 4)
+    {
+      strip.setPixelColor(i,strip.Color(50,0,0));
+    }
+    else if(i >= 4 && i < 8)
+    {
+      strip.setPixelColor(i,strip.Color(50,50,0));
+    }
+    else if(i >= 8 && i < 12)
+    {
+      strip.setPixelColor(i,strip.Color(0,50,0));
+    }
+  }
+  for(int i = leuchten; i < ledNo; i++)
+  {
+    strip.setPixelColor(i,strip.Color(0,0,0));
+  }
+  
+  //strip data anzeigen 
+  strip.show();
+  
+  //delay
+  delay(1);
+}
+
+
+//berechnet distanz
+int calcDistanz()
+{
+  long distanz,dauer;
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  
+  digitalWrite(trig, LOW);
+  dauer = pulseIn(echo, HIGH);
+  distanz = dauer/29/2;
+  
+  if(distanz >= maxDistanz)
+  {
+    distanz = maxDistanz;
+  }
+  if(distanz <= minDistanz)
+  {
+    distanz = minDistanz;
+  }
+  return distanz;
+}

@@ -1,0 +1,79 @@
+const int sensorPin = A0;
+  const float standartTemp = 20.0;
+
+void setup(){
+          
+  //Serien Monitor gestartet
+  Serial.begin(9600); 
+  
+  //pin configurieren & leuchten auf low setzen
+  for (int nummer = 2; nummer < 7; nummer++){
+       pinMode(nummer, OUTPUT);
+       digitalWrite(nummer, LOW);
+       }
+}
+       
+       void loop(){
+         //sensor Wert wird gelesen
+         int sensorWert = analogRead(sensorPin);
+         
+         Serial.print (sensorWert);
+         
+         //spannung berechnen
+         float spannung = (sensorWert/1024.0)*5.0;
+         
+         //temperatur berechnen
+         float temperatur = (spannung - .5)*100;
+         
+         //consolen ausgaben
+         Serial.print("Grad C: ");
+         Serial.println(temperatur); 
+         
+         // Hier wird ermittelt welche Leuchten angeschaltet werden müssen
+                      if(temperatur < 0){
+                        digitalWrite(2, LOW);
+                        digitalWrite(3, LOW);
+                        digitalWrite(4, LOW);
+                        digitalWrite(5, LOW);
+                        digitalWrite(6, LOW);
+                      }
+        			  else if(temperatur < 25 && temperatur > 10){
+                        digitalWrite(2, HIGH);
+                       	digitalWrite(3, LOW);
+                        digitalWrite(4, LOW);
+                        digitalWrite(5, LOW);
+           				digitalWrite(6, LOW);
+                      }
+         			  else if(temperatur < 50 && temperatur > 25){
+                        digitalWrite(2, HIGH);
+                       	digitalWrite(3, HIGH);
+                        digitalWrite(4, LOW);
+                        digitalWrite(5, LOW);
+           				digitalWrite(6, LOW);
+                      }
+                      else if(temperatur < 75 && temperatur > 50){
+                        digitalWrite(2, HIGH);
+                        digitalWrite(3, HIGH);
+                        digitalWrite(4, HIGH);
+                        digitalWrite(5, LOW);
+                        digitalWrite(6, LOW);
+                      }
+         			  else if(temperatur < 100 && temperatur > 75){
+                        digitalWrite(2, HIGH);
+                        digitalWrite(3, HIGH);
+                        digitalWrite(4, HIGH);
+                        digitalWrite(5, HIGH);
+                        digitalWrite(6, LOW);
+                      }
+                      else if(temperatur > 100){
+                        digitalWrite(2, HIGH);
+                        digitalWrite(3, HIGH);
+                        digitalWrite(4, HIGH);
+                        digitalWrite(5, HIGH);
+                        digitalWrite(6, HIGH);
+
+                      }
+         
+         			  //delay zwischen durchläufen
+                      delay(1);
+       }
